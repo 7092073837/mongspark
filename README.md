@@ -31,7 +31,7 @@ Installation steps
     
     4.If running from spark-shell then change your working directory to org.com.analytics.df or org.com.analytics.rdd locations
 
-    5.Run the Movie_Driver Object to view results
+    5.Run the MovieDriver Object to view results
     
 Analytics Assignments:
 
@@ -47,7 +47,7 @@ Spark RDD & SPARK DATAFRAME
 8. Enrich movies dataset with extract the release year. Output the enriched dataset.
 9. Output dataset showing the number of movies per Genre per Year (movies will be counted many times if it's associated with multiple genres).
 
-Summary of steps to do:
+Summary of steps to do, for running dataframe API's:
 
 1. Import the project to any IDE(preferably Intellij)
 2. Change the input files location in org.com.analytics.df.loadSourcedata.scala
