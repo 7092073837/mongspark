@@ -11,7 +11,7 @@ In this assignment, we will use Spark to have a look at the Movie Lens dataset c
 Requirement:
 
 
-https://github.com/Manee08/mongspark.git
+https://alex-mailajalam@bitbucket.org/alex-mailajalam/meritgroup.git
 
 Environment
     Linux (Ubuntu 18.04)
@@ -24,8 +24,8 @@ Installation steps
 
     1.Clone the repository
 
-    2.git clone https://github.com/Manee08/mongspark.git
-      cd monspark/
+    2.git clone https://alex-mailajalam@bitbucket.org/alex-mailajalam/meritgroup.git
+      cd meritGroup/
 
     3.build sbt Using InteljIDEA 
     
