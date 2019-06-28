@@ -20,7 +20,9 @@ Environment
     Scala 2.11.7
 
 
-Installation steps
+Installation steps:
+
+(Note: setup is for for RDD package only and DF package is WIP)
 
     1.Clone the repository
 
@@ -29,7 +31,7 @@ Installation steps
 
     3.build sbt Using InteljIDEA 
     
-    4.If running from spark-shell then change your working directory to org.com.analytics.df or org.com.analytics.rdd locations
+    4.If running from spark-shell then change your working directory to org.com.analytics.rdd locations
 
     5.Run the MovieDriver Object to view results
     
