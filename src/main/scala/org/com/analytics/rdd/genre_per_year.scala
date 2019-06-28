@@ -1,6 +1,8 @@
 package org.com.analytics.rdd
 
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.sql.functions.explode
+import org.apache.spark.sql.functions.split
 
 
 /**
@@ -11,18 +13,11 @@ import org.apache.log4j.{Level, Logger}
 object genre_per_year  extends App with Context  {
   def genreperyear() {
     Logger.getLogger("org").setLevel(Level.ERROR)
-
-
-    var movies_rdd = sc.textFile(movies)
-
-    val header = movies_rdd.first()
-    movies_rdd = movies_rdd.filter(row => row != header)
-    val genre_per_year_result = movies_rdd.map(row => row.split(','))
-      .map(fields => (fields(0) + "," + fields(1), fields(2)))
-      .flatMapValues(x => x.split('|'))
-      .collect()
-    genre_per_year_result.take(10000).foreach(println)
-
+    val sqlContext = new org.apache.spark.sql.SQLContext (sc)
+    import sqlContext.implicits._
+    spark.read.csv(movies).toDF.registerTempTable("movies")
+    sqlContext.sql("select `_c2` as genre,REGEXP_REPLACE(substr(`_c1`,length(`_c1`)-6,7),'[(]|[)]','') as year from movies where `_c0`!='movieId'").registerTempTable("gn_yr")
+    sqlContext.sql("select * from gn_yr").withColumn("genre", explode(split($"genre", "[|]"))).groupBy("year","genre").count().show
   }
 
 }

@@ -10,11 +10,11 @@ object MovieProcessEvent  {
   def main(args: Array[String]): Unit = {
 
     dramaMovies.filterDramaMovies()
-    movieRatings.movieRating()
+    /*movieRatings.movieRating()
     UniqueMovieRatings.uniqueMovies()
     usersRatings.userMostRatings()
     MoviesRatedTagged.movieRatedTags()
-    NumberOfMovies.numOfGenresPerYear()
+    NumberOfMovies.numOfGenresPerYear()*/
 
   }
 }

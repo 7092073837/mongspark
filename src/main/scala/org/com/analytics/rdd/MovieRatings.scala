@@ -25,10 +25,10 @@ object MovieRatings  extends App with Context  {
     val header = data.first()
     data = data.filter(row => row != header)
     val result = data.map(x => x.movie_ID).distinct.count()
-    println("Unique movies have been rated " + result)
+    println("Unique movies that have been rated: " + result)
     data.keyBy(x => x.user_ID).mapValues(x => 1).reduceByKey((x, y) => x + y).sortBy(_._2, false).take(1)
     val notrated = 18
-println("Unique movies have been rated" + notrated)
+println("Unique movies that have not been rated: " + notrated)
 
   }
 }

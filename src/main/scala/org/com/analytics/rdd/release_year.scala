@@ -9,25 +9,22 @@ import org.apache.log4j.{Level, Logger}
   * generate result
   */
 object release_year extends App with Context {
-
+  case class Movies(movieId: Int,title: String,genres:String)
   def releaseyear() {
-
-
 
     Logger.getLogger("org").setLevel(Level.ERROR)
 
-    var release_year_rdd = sc.textFile(movies)
-
-    val header = release_year_rdd.first()
-    release_year_rdd = release_year_rdd.filter(row => row != header)
-
-    val fil = release_year_rdd.map(row => row.split(',')(1).toString()
-    )
-
-    val sv = fil.map(x => x.slice(0, x.length - 6) ++ "," ++ x.slice(x.length - 5, x.length - 1))
+    val sqlContext = new org.apache.spark.sql.SQLContext (sc)
+    import sqlContext.implicits._
+    val moviesRDD = sc.textFile(movies)
+    val moviesHeader = moviesRDD.first()
+    val moviesWOHeaderRDD = moviesRDD.filter(row => row != moviesHeader)
 
 
-    sv.take(10000).foreach(println)
+    val moviesDF = moviesWOHeaderRDD.map(_.split(",")).map(p=>Movies(p(0).toInt,p(1),p(2))).toDF
+    moviesDF.registerTempTable("movies")
+
+    sqlContext.sql("select movieId,title,genres,REGEXP_REPLACE(substr(title,length(title)-6,7),'[(]|[)]','') as year from movies limit 10").show
 
 
   }

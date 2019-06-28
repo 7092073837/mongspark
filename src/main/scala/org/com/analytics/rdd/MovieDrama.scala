@@ -18,18 +18,13 @@ object MovieDrama  extends App with Context{
 
     Logger.getLogger("org").setLevel(Level.ERROR)
 
-    var Movie_rdd = sc.textFile(movies)
+    var movieRDD = sc.textFile(movies)
 
-    val header = Movie_rdd.first()
+    val movieHeader = movieRDD.first()
 
-    Movie_rdd = Movie_rdd.filter(row => row != header)
+    movieRDD = movieRDD.filter(row => row != movieHeader).filter(line=>line.contains("Drama"))
 
-    val MovieDrama_result = Movie_rdd.map(row => row.split(','))
-      .map(fields => (fields(1), fields(2)))
-      .flatMapValues(x => x.split('|'))
-      .filter(x => x._2 == "Action")
-
-    println(" Movies with the Drama genre are   :" + MovieDrama_result.count())
+    println("Count of movies with the Drama genre are   :" + movieRDD.count())
 
 
   }

@@ -13,33 +13,39 @@ import org.apache.log4j.{Level, Logger}
   */
 object movie_tagged  extends App with Context  {
 
+    case class Rating(userid: Int, movieid: Int, rating: Double, timestamp: BigInt)
+    case class Tags(userid: Int, movieid: Int, tag: String, timestamp: BigInt)
+
     def movietagged(): Unit = {
 
         Logger.getLogger("org").setLevel(Level.ERROR)
 
+        val sqlContext = new org.apache.spark.sql.SQLContext (sc)
+        import sqlContext.implicits._
+        val ratingsRDD = sc.textFile(ratings)
+        val ratingsHeader = ratingsRDD.first();
+        val ratingsWOHeaderRDD = ratingsRDD.filter(row => row != ratingsHeader)
+
+        val ratingsDF = ratingsWOHeaderRDD.map(_.split(",")).map(p=>Rating(p(0).toInt,p(1).toInt,p(2).toDouble,p(3).toLong)).toDF
+        ratingsDF.registerTempTable("ratings")
+
+        val tagsRDD = sc.textFile(tags)
+        val tagsHeaders = tagsRDD.first();
+        val tagsWOHeaderRDD = tagsRDD.filter(row => row != tagsHeaders)
+
+        val tagsDF = tagsWOHeaderRDD.map(_.split(",")).map(p=>Tags(p(0).toInt,p(1).toInt,p(2),p(3).toLong)).toDF
+        tagsDF.registerTempTable("tags")
 
 
-        var ratingsRDD = sc.textFile(ratings)
-        val movies = ratingsRDD.map(line => line.split(",")(0))
-
-        val header = ratingsRDD.first();
-
-        ratingsRDD = ratingsRDD.filter(row => row != header)
-         val rating_results = 21217
-        val tagged_results = 79619
-        var mv_names = sc.textFile(tags)
-        val headers = mv_names.first();
-        mv_names = mv_names.filter(row => row != header)
-
-        val rating_result = ratingsRDD.map(row => row.split(','))
-          .map(ar => (ar(0).toInt, ar(1).toInt))
-
-        val tagged_result = mv_names.map(row => row.split(','))
-          .map(arr => (arr(0).toInt, arr(1).toInt))
+        sqlContext.sql("select count(distinct r.userid) as user_count_wo_tag from ratings r join tags t where r.userid=t.userid and r.movieid=t.movieid").show
 
 
-        println("Users rated and tag the movies list  : " + rating_results)
-        println("Users rated and not tag the movies list : "+ tagged_results)
+        sqlContext.sql("select count(distinct(r.userid)) as user_with_rating from ratings r left join tags t where r.userid=t.userid and r.movieid not in (select movieid from tags)").show
+
+
+
+
+
 
     }
 }
